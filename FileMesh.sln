@@ -21,7 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{FBB9E645-7
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Targets", "Targets", "{F0EB90AE-72F3-46B8-B606-6652E93CE329}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMesh.Windows", "FileMesh.Windows\FileMesh.Windows.csproj", "{AF09E5B2-47D5-4AFE-93B3-01F656BB65EC}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FileMesh.Windows", "FileMesh\FileMesh.Windows\FileMesh.Windows.csproj", "{AF09E5B2-47D5-4AFE-93B3-01F656BB65EC}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
