@@ -1,8 +1,6 @@
-﻿using System.ComponentModel;
-
-namespace FileMatch
+﻿namespace FileMatch
 {
-    public class Bucket : Node, INotifyPropertyChanged
+    public class Bucket : Node
     {
         int _rangeStart;
         public int RangeStart
@@ -14,7 +12,7 @@ namespace FileMatch
             protected set
             {
                 _rangeStart = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RangeStart)));
+                PropertyChange(nameof(RangeStart));
             }
         }
 
@@ -28,7 +26,7 @@ namespace FileMatch
             protected set
             {
                 _rangeEnd = value;
-                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(nameof(RangeEnd)));
+                PropertyChange(nameof(RangeEnd));
             }
         }
 
@@ -37,7 +35,5 @@ namespace FileMatch
             RangeStart = rangeStart;
             RangeEnd = rangeEnd;
         }
-
-        public event PropertyChangedEventHandler PropertyChanged;
     }
 }

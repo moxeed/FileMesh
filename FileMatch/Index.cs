@@ -31,6 +31,7 @@ namespace FileMatch
             }
 
             Parent = nodes.OrderBy(n => n.Depth).First();
+            Depth = Parent.Depth + 1;
 
             var index = await _graphNetwork.Split(Parent, this);
             Entries.AddRange(index.Entries);
