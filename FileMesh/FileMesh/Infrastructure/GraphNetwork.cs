@@ -25,7 +25,7 @@ namespace FileMesh.Infrastructure
         }
 
         public Task Insert(Node node, Entry entry) => Http.Post<bool>(node, nameof(Insert), entry);
-        public Task<IEnumerable<Entry>> Search(Node node, string term) => Http.Get<IEnumerable<Entry>>(node, nameof(Search) + "?term=" + term);
+        public async Task<IEnumerable<Entry>> Search(Node node, string term) => await Http.Get<List<Entry>>(node, nameof(Search) + "?term=" + term);
         public Task<IndexModel> Split(Node parent, Node newChild) => Http.Post<IndexModel>(parent, nameof(Split), newChild);
     }
 }

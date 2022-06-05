@@ -4,7 +4,7 @@ namespace FileMatch
 {
     public class EntryName
     {
-        public string Name { get; }
+        public string Name { get; set; }
         internal int Key => Name.ToLower().Min();
 
         public EntryName(string name)

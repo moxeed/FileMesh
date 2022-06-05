@@ -53,7 +53,7 @@ namespace FileMatch
             var relatedNode = GetRalatedNode(entry.Key);
 
             if (relatedNode != null) {
-                _graphNetwork.Insert(relatedNode, entry);
+                return _graphNetwork.Insert(relatedNode, entry);
             }
 
             Entries.Add(entry);
@@ -66,9 +66,8 @@ namespace FileMatch
 
             if (relatedNode != null)
             {
-                _graphNetwork.Search(relatedNode, entryName.Name);
+                return _graphNetwork.Search(relatedNode, entryName.Name);
             }
-
             return Task.FromResult(Entries.Where(t => t.Name.IsMatch(entryName)));
         }
 
@@ -84,7 +83,6 @@ namespace FileMatch
 
             Entries = Entries.Where(e => e.Key > mid).ToList();
             Buckets.Add(new Bucket(newChild, RangeStart, mid));
-            RangeStart = mid;
             return index;
         }
 

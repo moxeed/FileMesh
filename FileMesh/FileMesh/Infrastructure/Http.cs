@@ -25,10 +25,11 @@ namespace FileMesh.Infrastructure
             }
         }
 
-        public static Task<T> Get<T>(Node node, string path)
+        public static async Task<T> Get<T>(Node node, string path)
         {
             var url = $"http://{node.Address}:{AppPort}/{path}";
-            return url.GetJsonAsync<T>();
+            var res = await url.GetJsonAsync<T>();
+            return res;
         }
 
         public static string GetIp() {

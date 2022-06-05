@@ -75,7 +75,7 @@
                         <StackLayout Margin="5,0,5,5">
                             <StackLayout Orientation="Horizontal">
                                 <StackLayout Orientation="Horizontal" Margin="10">
-                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Name}" FontSize="14" HorizontalTextAlignment="Start"/>
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Path=Name.Name}" FontSize="14" HorizontalTextAlignment="Start"/>
                                     <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Size}" FontSize="14" HorizontalTextAlignment="End"/>
                                 </StackLayout>
                             </StackLayout>

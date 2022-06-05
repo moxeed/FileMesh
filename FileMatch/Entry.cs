@@ -1,15 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace FileMatch
 {
     public class Entry
     {
-        public Guid Id { get; }
-        public long Size { get; }
-        public EntryName Name { get; }
-        public ICollection<Node> Locations { get; }
+        public Guid Id { get; set; }
+        public long Size { get; set; }
+        public EntryName Name { get; set; }
+        public ICollection<Node> Locations { get; set; }
+
+        public Entry() {
+            Locations = new HashSet<Node>();
+        }
 
         public Entry(Guid id, string name, long size)
         {

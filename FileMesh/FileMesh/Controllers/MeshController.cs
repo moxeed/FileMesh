@@ -24,7 +24,7 @@ namespace FileMesh.Controllers
         [Route(HttpVerbs.Get, "/Search")]
         public Task<IEnumerable<Entry>> Search()
         {
-            var term = HttpContext.GetRequestQueryData().GetKey(0);
+            var term = HttpContext.GetRequestQueryData().GetValues("term")[0];
             return MeshService.Search(term);
         }
 
