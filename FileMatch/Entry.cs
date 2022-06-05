@@ -7,11 +7,11 @@ namespace FileMatch
     public class Entry
     {
         public Guid Id { get; }
-        public int Size { get; }
+        public long Size { get; }
         public EntryName Name { get; }
         public ICollection<Node> Locations { get; }
 
-        public Entry(Guid id, string name, int size)
+        public Entry(Guid id, string name, long size)
         {
             Id = id;
             Size = size;

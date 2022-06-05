@@ -12,9 +12,17 @@ namespace FileMesh.Infrastructure
     {
         public const int AppPort = 8080;
 
-        public static Task<T> Post<T>(Node node, string path, object body = null) {
+        public static async Task<T> Post<T>(Node node, string path, object body = null) {
             var url = $"http://{node.Address}:{AppPort}/{path}";
-            return url.PostJsonAsync(body).ReceiveJson<T>();
+            try
+            {
+                var res = await url.PostJsonAsync(body).ReceiveJson<T>();
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw;
+            }
         }
 
         public static Task<T> Get<T>(Node node, string path)

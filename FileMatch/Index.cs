@@ -1,4 +1,4 @@
-﻿using System;
+﻿using FileMatch.Model;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,25 +10,39 @@ namespace FileMatch
         private readonly IGraphNetwork _graphNetwork;
 
         public Node Parent { get; private set; }
-        public ICollection<Entry> Entries { get; private set; }
+        public List<Entry> Entries { get; private set; }
         public ICollection<Bucket> Buckets { get; }
 
         public Index(IGraphNetwork graphNetwork, Node node): base(node, char.MinValue, char.MaxValue)
         {
             _graphNetwork = graphNetwork;
-            Entries = new HashSet<Entry>();
+            Entries = new List<Entry>();
             Buckets = new HashSet<Bucket>();
         }
 
         public async Task SelectParent()
         {
             var nodes = await _graphNetwork.Scan();
-            Parent = nodes.OrderBy(n => n.Depth).FirstOrDefault() ?? new Node(-1, "");
+
+            Parent = new Node(-1, "");
+
+            if (!nodes.Any()) {
+                return;
+            }
+
+            Parent = nodes.OrderBy(n => n.Depth).First();
+
+            var index = await _graphNetwork.Split(Parent, this);
+            Entries.AddRange(index.Entries);
+            RangeStart = index.RangeStart;
+            RangeEnd = index.RangeEnd;
         }
 
-        internal Index(IGraphNetwork graphNetwork, Node node, ICollection<Entry> entries) : base(node, char.MinValue, char.MaxValue)
+        internal Index(IGraphNetwork graphNetwork, Node node, int rangeStart, int rangeEnd, List<Entry> entries) : base(node, char.MinValue, char.MaxValue)
         {
             _graphNetwork = graphNetwork;
+            RangeStart = rangeStart;
+            RangeEnd = rangeEnd;
             Entries = entries;
             Buckets = new HashSet<Bucket>();
         }
@@ -57,15 +71,20 @@ namespace FileMatch
             return Task.FromResult(Entries.Where(t => t.Name.IsMatch(entryName)));
         }
 
-        public Index Split(Node newChild)
+        public IndexModel Split(Node newChild)
         {
             var mid = (RangeStart + RangeEnd) / 2;
             var outEntries = Entries.Where(e => e.Key <= mid).ToList();
+            var index = new IndexModel {
+                RangeEnd = mid,
+                RangeStart = RangeStart,
+                Entries = outEntries
+            };
 
-            RangeStart = mid;
             Entries = Entries.Where(e => e.Key > mid).ToList();
-
-            return new Index(_graphNetwork, newChild, outEntries);
+            Buckets.Add(new Bucket(newChild, RangeStart, mid));
+            RangeStart = mid;
+            return index;
         }
 
         private Node GetRalatedNode(int key) {

@@ -2,6 +2,7 @@
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
 using FileMatch;
+using FileMatch.Model;
 using FileMesh.Service;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -27,8 +28,8 @@ namespace FileMesh.Controllers
             return MeshService.Search(term);
         }
 
-        [Route(HttpVerbs.Get, "/Split")]
-        public async Task<Index> Split()
+        [Route(HttpVerbs.Post, "/Split")]
+        public async Task<IndexModel> Split()
         {
             var newChild = await HttpContext.GetRequestDataAsync<Node>();
             return MeshService.Split(newChild);

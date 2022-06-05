@@ -1,27 +1,88 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:local="clr-namespace:FileMesh.Service"
              x:Class="FileMesh.MainPage">
 
     <StackLayout>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label Text="Welcome to Xamarin.Forms!" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+        <StackLayout Orientation="Horizontal" Margin="5,5,5,0" BindingContext="{x:Static local:MeshService.Index}">
+            <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
+                <StackLayout>
+                    <Label Text="RangeStart" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
+                    <Label x:Name="rangeStart" Text="{Binding RangeStart}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
+                </StackLayout>
+            </Frame>
+            <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
+                <StackLayout>
+                    <Label Text="Depth" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
+                    <Label x:Name="depth" Text="{Binding Depth}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
+                </StackLayout>
+            </Frame>
+            <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
+                <StackLayout>
+                    <Label Text="RangeEnd" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
+                    <Label x:Name="rangeEnd" Text="{Binding RangeEnd}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
+                </StackLayout>
+            </Frame>
+        </StackLayout>
+        <Frame BackgroundColor="#00564d" Margin="5,0,5,0">
+            <Label x:Name="label" HorizontalTextAlignment="Center" TextColor="White" FontSize="20"/>
         </Frame>
-        <Frame BackgroundColor="#2196F3" Padding="24" CornerRadius="0">
-            <Label x:Name="label" HorizontalTextAlignment="Center" TextColor="White" FontSize="36"/>
+        <Frame Padding="0" 
+               Margin="5,5,5,0"
+               BackgroundColor="White"
+               BorderColor="White">
+            <Entry MinimumHeightRequest="100" 
+               TextChanged="Entry_TextChanged"
+               Completed="Entry_Completed"
+               Placeholder="🔍 search ..." 
+               TextColor="#282828" 
+               PlaceholderColor="#282828"
+               BackgroundColor="Transparent"
+               ClearButtonVisibility="WhileEditing"
+               FontSize="16"
+               HeightRequest="50"/>
         </Frame>
-        <Label Text="Start developing now" FontSize="Title" Padding="30,10,30,10"/>
-        <Label Text="Make changes to Your XAML file and save to see your UI update in the running app with XAML Hot Reload. Give it a try!" FontSize="16" Padding="30,0,30,0"/>
-        <Label FontSize="16" Padding="30,24,30,0">
-            <Label.FormattedText>
-                <FormattedString>
-                    <FormattedString.Spans>
-                        <Span Text="Learn more at "/>
-                        <Span Text="https://aka.ms/xamarin-quickstart" FontAttributes="Bold"/>
-                    </FormattedString.Spans>
-                </FormattedString>
-            </Label.FormattedText>
-        </Label>
+        <Button Text="AddFile" HeightRequest="50" 
+                BackgroundColor="#0e9594" 
+                TextColor="White" 
+                FontSize="16" 
+                Margin="5,0,5,5"
+                CornerRadius="5"
+                Clicked="Button_Clicked"/>
+        <ListView x:Name="listView" BindingContext="{x:Static local:MeshService.FileRegistery}" ItemsSource="{Binding Files}">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell Tapped="ViewCell_Tapped">
+                        <StackLayout Margin="5,0,5,5">
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout Orientation="Horizontal" Margin="10">
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Name}" FontSize="14"/>
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Path}" FontSize="14"/>
+                                    <Label HorizontalOptions="End" TextColor="#00564d" Text="{Binding DownloadSpeed}" FontSize="14"/>
+                                </StackLayout>
+                            </StackLayout>
+                            <ProgressBar Progress="{Binding Progress}" HeightRequest="5" ProgressColor="#00564d" BackgroundColor="#0e9594"/>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
+        <ListView x:Name="entryListView">
+            <ListView.ItemTemplate>
+                <DataTemplate>
+                    <ViewCell Tapped="EntryViewCell_Tapped">
+                        <StackLayout Margin="5,0,5,5">
+                            <StackLayout Orientation="Horizontal">
+                                <StackLayout Orientation="Horizontal" Margin="10">
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Name}" FontSize="14" HorizontalTextAlignment="Start"/>
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Size}" FontSize="14" HorizontalTextAlignment="End"/>
+                                </StackLayout>
+                            </StackLayout>
+                        </StackLayout>
+                    </ViewCell>
+                </DataTemplate>
+            </ListView.ItemTemplate>
+        </ListView>
     </StackLayout>
-
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using FileMatch.Model;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace FileMatch
@@ -9,6 +10,6 @@ namespace FileMatch
         Task<IEnumerable<Entry>> Search(Node node, string term);
 
         Task<IEnumerable<Node>> Scan();
-        Task<Index> Split(Node parent, Node newChild);
+        Task<IndexModel> Split(Node parent, Node newChild);
     }
 }
