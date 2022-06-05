@@ -11,8 +11,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <None Remove="Infrastructure\Http.cs~RFd1de9.TMP" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EmbedIO" Version="3.4.3" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
+    <PackageReference Include="Rssdp" Version="4.0.4" />
     <PackageReference Include="Xamarin.Forms" Version="5.0.0.2196" />
     <PackageReference Include="Xamarin.Essentials" Version="1.7.0" />
   </ItemGroup>

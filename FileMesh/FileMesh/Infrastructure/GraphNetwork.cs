@@ -1,5 +1,5 @@
 ﻿using FileMatch;
-using System;
+using Rssdp;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -10,20 +10,17 @@ namespace FileMesh.Infrastructure
     {
         public async Task<IEnumerable<Node>> Scan()
         {
-            var ip = Http.GetIp();
-            var network = ip.Substring(0, ip.LastIndexOf('.'));
-            var nodes = new List<Node>();
-            foreach (var i in Enumerable.Range(1, 2))
+            using (var deviceLocator = new SsdpDeviceLocator())
             {
-                try
-                {
-                    var node = await Http.Get<Node>($"{network}.{i}");
-                    nodes.Add(node);
-                }
-                catch(Exception e) {}
-            }
+                var foundDevices = await deviceLocator.SearchAsync($"urn:{nameof(FileMesh)}:device:{nameof(Node)}:1");
 
-            return nodes;
+                return foundDevices.Select(d =>
+                {
+                    var uri = d.DescriptionLocation.ToString().Replace("/", "");
+                    var data = uri.Split(':');
+                    return new Node(int.Parse(data[2]), data[1]);
+                }).Where(n => n.Address != Http.GetIp());
+            }
         }
 
         public Task Insert(Node node, Entry entry) => Http.Post<bool>(node, nameof(Insert), entry);

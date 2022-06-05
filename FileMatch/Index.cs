@@ -20,9 +20,9 @@ namespace FileMatch
             Buckets = new HashSet<Bucket>();
         }
 
-        public void SelectParent()
+        public async Task SelectParent()
         {
-            var nodes = _graphNetwork.Scan().Result;
+            var nodes = await _graphNetwork.Scan();
             Parent = nodes.OrderBy(n => n.Depth).FirstOrDefault() ?? new Node(-1, "");
         }
 

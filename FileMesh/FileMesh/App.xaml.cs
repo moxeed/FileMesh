@@ -1,9 +1,12 @@
 ﻿using EmbedIO;
 using EmbedIO.Actions;
 using EmbedIO.WebApi;
-using FileMatch;
 using FileMesh.Controllers;
 using FileMesh.Infrastructure;
+using FileMesh.Service;
+using Rssdp;
+using System;
+using System.Threading.Tasks;
 using Xamarin.Forms;
 
 namespace FileMesh
@@ -26,7 +29,7 @@ namespace FileMesh
 
         protected override void OnStart()
         {
-            
+            Task.Run(async () => await MeshService.Initilize());
         }
 
         protected override void OnSleep()

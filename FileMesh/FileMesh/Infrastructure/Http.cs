@@ -1,5 +1,6 @@
 ﻿using FileMatch;
 using Flurl.Http;
+using System;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
@@ -16,12 +17,6 @@ namespace FileMesh.Infrastructure
             return url.PostJsonAsync(body).ReceiveJson<T>();
         }
 
-        public static Task<T> Get<T>(string address)
-        {
-            var url = $"http://{address}:{AppPort}";
-            return url.WithTimeout(50).GetJsonAsync<T>();
-        }
-
         public static Task<T> Get<T>(Node node, string path)
         {
             var url = $"http://{node.Address}:{AppPort}/{path}";
@@ -31,7 +26,7 @@ namespace FileMesh.Infrastructure
         public static string GetIp() {
             string hostName = Dns.GetHostName();
             string myIP = Dns.GetHostEntry(hostName).AddressList
-                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork)
+                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork && i.ToString().StartsWith("192"))
                 .ToString();
 
             return myIP;
