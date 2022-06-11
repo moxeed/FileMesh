@@ -88,7 +88,7 @@ namespace FileMatch
 
         public IndexModel Split(Node newChild)
         {
-            var mid = (RangeStart + RangeEnd) / 2;
+            var mid = (Buckets.Max(b => b.RangeEnd) + RangeEnd) / 2;
             var outEntries = Entries.Where(e => e.Key <= mid).ToList();
             var index = new IndexModel {
                 RangeEnd = mid,
