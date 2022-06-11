@@ -18,14 +18,25 @@ namespace FileSystem
             _fileNetwork = fileNetwork;
         }
 
-        public async Task Download(Entry entry) { 
-            var file = await PhysicalFile.Download(entry);
+        public void Download(Entry entry) { 
+            var file = PhysicalFile.Download(entry, _fileNetwork);
             Files.Add(file);
         }
 
         public void AddFile(PhysicalFile file)
         {
             Files.Add(file);
+        }
+
+        public Task<Chunk> GetChunck(Guid id, int seq, int size)
+        {
+            foreach (var file in Files) {
+                if (file.Id == id) {
+                    return file.GetChunck(seq, size);
+                }
+            }
+
+            throw new Exception("File Not Found");
         }
     }
 }

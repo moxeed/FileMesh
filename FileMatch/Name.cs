@@ -7,6 +7,8 @@ namespace FileMatch
         public string Name { get; set; }
         internal int Key => Name.ToLower().Min();
 
+        public EntryName() { }
+
         public EntryName(string name)
         {
             Name = name;

@@ -5,7 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace FileMesh.Infrastructure
+namespace Service.Infrastructure
 {
     internal class GraphNetwork : IGraphNetwork
     {
@@ -13,7 +13,7 @@ namespace FileMesh.Infrastructure
         {
             using (var deviceLocator = new SsdpDeviceLocator())
             {
-                var foundDevices = await deviceLocator.SearchAsync($"urn:{nameof(FileMesh)}:device:{nameof(Node)}:1");
+                var foundDevices = await deviceLocator.SearchAsync($"urn:{nameof(Service)}:device:{nameof(Node)}:1");
 
                 return foundDevices.Select(d =>
                 {

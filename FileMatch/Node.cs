@@ -18,6 +18,7 @@ namespace FileMatch
             }
         }
         public string Address { get; set; }
+        public Node() { }
 
         public Node(int depth, string address)
         {
@@ -26,8 +27,9 @@ namespace FileMatch
         }
 
         public event PropertyChangedEventHandler PropertyChanged;
-            
-        protected void PropertyChange(string name) {
+
+        protected void PropertyChange(string name)
+        {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
         }
     }

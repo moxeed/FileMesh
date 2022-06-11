@@ -11,10 +11,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="Infrastructure\Http.cs~RFd1de9.TMP" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="EmbedIO" Version="3.4.3" />
     <PackageReference Include="Flurl.Http" Version="3.2.4" />
     <PackageReference Include="Rssdp" Version="4.0.4" />
@@ -23,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\Application\Service.csproj" />
     <ProjectReference Include="..\..\FileMatch\FileMatch.csproj" />
     <ProjectReference Include="..\..\FileSystem\FileSystem.csproj" />
   </ItemGroup>

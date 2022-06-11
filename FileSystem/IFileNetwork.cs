@@ -6,6 +6,6 @@ namespace FileSystem
 {
     public interface IFileNetwork
     {
-        Task<Chunk> GetChunk(Node node, Guid id, int sequenceNumber);
+        Task<Chunk> GetChunk(Node node, Guid id, int sequenceNumber, int size);
     }
 }

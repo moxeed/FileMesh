@@ -50,9 +50,24 @@ namespace FileMatch
 
         public Task Insert(Entry entry)
         {
+            entry.Locations.Add(this);
+
             var relatedNode = GetRalatedNode(entry.Key);
 
             if (relatedNode != null) {
+                return _graphNetwork.Insert(relatedNode, entry);
+            }
+
+            Entries.Add(entry);
+            return Task.CompletedTask;
+        }
+
+        public Task PostInsert(Entry entry)
+        {
+            var relatedNode = GetRalatedNode(entry.Key);
+
+            if (relatedNode != null)
+            {
                 return _graphNetwork.Insert(relatedNode, entry);
             }
 

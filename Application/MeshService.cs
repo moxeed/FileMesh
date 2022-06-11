@@ -1,14 +1,14 @@
 ﻿using FileMatch;
 using FileMatch.Model;
-using FileMesh.Infrastructure;
 using FileSystem;
 using Rssdp;
+using Service.Infrastructure;
+using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Xamarin.Essentials;
 
-namespace FileMesh.Service
+namespace Service
 {
     public static class MeshService
     {
@@ -17,12 +17,11 @@ namespace FileMesh.Service
 
         static MeshService()
         {
-
             Index = new Index(new GraphNetwork(), new Node(0, Http.GetIp()));
             FileRegistery = new FileRegistery(new FileNetwork());
         }
 
-        internal static async Task Initilize()
+        public static async Task Initilize()
         {
             await Index.SelectParent();
 
@@ -30,11 +29,11 @@ namespace FileMesh.Service
             {
                 CacheLifetime = TimeSpan.FromMinutes(30),
                 Location = new Uri($"http://{Http.GetIp()}:{Index.Depth}"),
-                DeviceTypeNamespace = nameof(FileMesh),
+                DeviceTypeNamespace = nameof(Service),
                 DeviceType = nameof(Node),
-                FriendlyName = nameof(FileMesh),
-                Manufacturer = nameof(FileMesh),
-                ModelName = nameof(FileMesh),
+                FriendlyName = nameof(Service),
+                Manufacturer = nameof(Service),
+                ModelName = nameof(Service),
                 DeviceVersion = 1,
                 Uuid = Guid.NewGuid().ToString(), // persist in file
             };
@@ -43,28 +42,39 @@ namespace FileMesh.Service
             publisher.AddDevice(deviceDefinition);
         }
 
-        internal static Task AddFile(FileResult file)
+        public static Task<Chunk> GetChunck(Guid id, int seq, int size)
         {
-            var size = file.OpenReadAsync().Result.Length;
-            var entry = new Entry(Guid.NewGuid(), file.FileName, size);
-            FileRegistery.AddFile(new PhysicalFile(file.FileName, file.FullPath, size));
+            return FileRegistery.GetChunck(id, seq, size);
+        }
+
+        public static Task AddFile(FileModel file)
+        {
+            var physicalFile = new PhysicalFile(file.FileName, file.FullPath, file.Size);
+            var entry = new Entry(physicalFile.Id, file.FileName, file.Size);
+
+            FileRegistery.AddFile(physicalFile);
             return Index.Insert(entry);
         }
 
-        internal static Node GetNode()
+        public static void DownloadFile(Entry entry)
+        {
+            FileRegistery.Download(entry);
+        }
+
+        public static Node GetNode()
         {
             var parentDepth = Index.Parent.Depth;
             return new Node(parentDepth + 1, Http.GetIp());
         }
 
-        internal static Task Insert(Entry entry) => Index.Insert(entry);
+        public static Task Insert(Entry entry) => Index.PostInsert(entry);
 
-        internal static Task<IEnumerable<Entry>> Search(string term)
+        public static Task<IEnumerable<Entry>> Search(string term)
         {
             var entryName = new EntryName(term);
             return Index.Search(entryName);
         }
 
-        internal static IndexModel Split(Node newChild) => Index.Split(newChild);
+        public static IndexModel Split(Node newChild) => Index.Split(newChild);
     }
 }

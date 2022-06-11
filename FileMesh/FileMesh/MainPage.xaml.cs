@@ -1,6 +1,6 @@
-﻿using FileMesh.Infrastructure;
-using FileMesh.Service;
-using FileSystem;
+﻿using FileSystem;
+using Service;
+using Service.Infrastructure;
 using System;
 using System.Collections.ObjectModel;
 using System.Threading.Tasks;
@@ -29,7 +29,11 @@ namespace FileMesh
 
             if (file != null)
             {
-                await MeshService.AddFile(file);
+                await MeshService.AddFile(new Service.Models.FileModel { 
+                    FileName = file.FileName,
+                    FullPath = file.FullPath,
+                    Size = file.OpenReadAsync().Result.Length
+                });
             }
         }
 
@@ -59,6 +63,9 @@ namespace FileMesh
         {
             var viewCell = (ViewCell)sender;
             var context = (FileMatch.Entry)viewCell.BindingContext;
+
+            MeshService.DownloadFile(context);
+
             ShowFileList();
         }
 

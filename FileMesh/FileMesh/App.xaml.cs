@@ -2,10 +2,8 @@
 using EmbedIO.Actions;
 using EmbedIO.WebApi;
 using FileMesh.Controllers;
-using FileMesh.Infrastructure;
-using FileMesh.Service;
-using Rssdp;
-using System;
+using Service;
+using Service.Infrastructure;
 using System.Threading.Tasks;
 using Xamarin.Forms;
 

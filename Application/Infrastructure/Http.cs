@@ -6,13 +6,14 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 
-namespace FileMesh.Infrastructure
+namespace Service.Infrastructure
 {
-    internal class Http
+    public class Http
     {
         public const int AppPort = 8080;
 
-        public static async Task<T> Post<T>(Node node, string path, object body = null) {
+        public static async Task<T> Post<T>(Node node, string path, object body = null)
+        {
             var url = $"http://{node.Address}:{AppPort}/{path}";
             try
             {
@@ -32,13 +33,18 @@ namespace FileMesh.Infrastructure
             return res;
         }
 
-        public static string GetIp() {
+        public static string GetIp()
+        {
             string hostName = Dns.GetHostName();
-            string myIP = Dns.GetHostEntry(hostName).AddressList
-                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork && i.ToString().StartsWith("192"))
-                .ToString();
+            var myIP = Dns.GetHostEntry(hostName).AddressList
+                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork && i.ToString().StartsWith("192"));
 
-            return myIP;
+            if (myIP is null)
+            {
+                return "localhost";
+            }
+
+            return myIP.ToString();
         }
     }
 }

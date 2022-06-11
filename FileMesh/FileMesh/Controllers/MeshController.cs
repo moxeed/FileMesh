@@ -3,7 +3,9 @@ using EmbedIO.Routing;
 using EmbedIO.WebApi;
 using FileMatch;
 using FileMatch.Model;
-using FileMesh.Service;
+using FileSystem;
+using Service;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -33,6 +35,12 @@ namespace FileMesh.Controllers
         {
             var newChild = await HttpContext.GetRequestDataAsync<Node>();
             return MeshService.Split(newChild);
+        }
+
+        [Route(HttpVerbs.Get, "/File")]
+        public Task<Chunk> File([QueryField] Guid id, [QueryField] int seq, [QueryField] int size)
+        {
+            return MeshService.GetChunck(id, seq, size);
         }
     }
 }

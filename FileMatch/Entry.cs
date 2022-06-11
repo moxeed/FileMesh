@@ -8,10 +8,10 @@ namespace FileMatch
         public Guid Id { get; set; }
         public long Size { get; set; }
         public EntryName Name { get; set; }
-        public ICollection<Node> Locations { get; set; }
+        public List<Node> Locations { get; set; }
 
         public Entry() {
-            Locations = new HashSet<Node>();
+            Locations = new List<Node>();
         }
 
         public Entry(Guid id, string name, long size)
@@ -19,7 +19,7 @@ namespace FileMatch
             Id = id;
             Size = size;
             Name = new EntryName(name);
-            Locations = new HashSet<Node>();
+            Locations = new List<Node>();
         }
 
         internal int Key => Name.Key;
