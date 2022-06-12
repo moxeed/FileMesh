@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Service;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -5,6 +6,12 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddCors(o => o.AddPolicy(
+        nameof(CorsPolicy),
+        p => p.AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowAnyOrigin()
+    ));
 
 await MeshService.Initilize();
 
@@ -16,6 +23,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors(nameof(CorsPolicy));
 app.MapControllers();
 
 app.Run();

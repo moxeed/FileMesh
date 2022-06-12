@@ -1,6 +1,6 @@
 ﻿using FileMatch;
-using FileMatch.Model;
 using Rssdp;
+using Service.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -24,8 +24,16 @@ namespace Service.Infrastructure
             }
         }
 
-        public Task Insert(Node node, Entry entry) => Http.Post<bool>(node, nameof(Insert), entry);
+        public Task Insert(Node node, Node source, Entry entry) => Http.Post<bool>(node, nameof(Insert), new InsertModel
+        {
+            Source = source,
+            Entry = entry
+        });
+
         public async Task<IEnumerable<Entry>> Search(Node node, string term) => await Http.Get<List<Entry>>(node, nameof(Search) + "?term=" + term);
-        public Task<IndexModel> Split(Node parent, Node newChild) => Http.Post<IndexModel>(parent, nameof(Split), newChild);
+
+        public Task Reset(Node node, int start, int end) => Http.Get<bool>(node, nameof(Reset) + $"?start={start}&end={end}");
+
+        public Task Join(Node parent, Node node) => Http.Post<bool>(parent, nameof(Join), node);
     }
 }

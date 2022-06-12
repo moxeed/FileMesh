@@ -1,14 +1,16 @@
 ﻿using FileMatch;
 using FileMatch.Model;
 using FileSystem;
+using Microsoft.AspNetCore.Cors;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 using Service;
-using System.Collections.ObjectModel;
 using Service.Models;
 
 namespace FileMesh.Controllers
 {
     [ApiController]
+    [EnableCors(nameof(CorsPolicy))]
     public sealed class MeshController : ControllerBase
     {
         [HttpGet("/")]
@@ -16,8 +18,8 @@ namespace FileMesh.Controllers
 
 
         [HttpPost("/Insert")]
-        public async Task Insert(Entry entry) {
-            await MeshService.Insert(entry);
+        public async Task Insert(InsertModel model) {
+            await MeshService.Insert(model.Entry, model.Source);
         }
 
         [HttpGet("/Search")]
@@ -26,10 +28,16 @@ namespace FileMesh.Controllers
             return MeshService.Search(term);
         }
 
-        [HttpPost("/Split")]
-        public IndexModel Split(Node node)
+        [HttpPost("/Join")]
+        public Task<bool> Join(Node node)
         {
-            return MeshService.Split(node);
+            return MeshService.Join(node);
+        }
+
+        [HttpGet("/Reset")]
+        public Task<bool> Reset(char start, char end)
+        {
+            return MeshService.Reset(start, end);
         }
 
         [HttpPost("/Download")]

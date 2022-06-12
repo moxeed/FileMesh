@@ -25,6 +25,9 @@
                 </StackLayout>
             </Frame>
         </StackLayout>
+        <Frame BindingContext="{x:Static local:MeshService.Index}" BackgroundColor="#00564d" Margin="5,0,5,0">
+            <Label Text="{Binding Path=Parent.Address}" HorizontalTextAlignment="Center" TextColor="White" FontSize="20"/>
+        </Frame>
         <Frame BackgroundColor="#00564d" Margin="5,0,5,0">
             <Label x:Name="label" HorizontalTextAlignment="Center" TextColor="White" FontSize="20"/>
         </Frame>
