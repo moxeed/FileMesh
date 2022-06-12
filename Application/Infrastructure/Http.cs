@@ -37,7 +37,7 @@ namespace Service.Infrastructure
         {
             string hostName = Dns.GetHostName();
             var myIP = Dns.GetHostEntry(hostName).AddressList
-                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork);
+                .FirstOrDefault(i => i.AddressFamily == AddressFamily.InterNetwork && i.ToString().StartsWith("192"));
 
             if (myIP is null)
             {

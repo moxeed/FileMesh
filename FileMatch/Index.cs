@@ -32,11 +32,15 @@ namespace FileMatch
                 return;
             }
 
-            Parent = nodes.OrderBy(n => n.Depth).First();
-            Depth = Parent.Depth + 1;
-            PropertyChange(nameof(Parent));
+            try
+            {
+                Parent = nodes.OrderBy(n => n.Depth).First();
+                Depth = Parent.Depth + 1;
+                PropertyChange(nameof(Parent));
 
-            await _graphNetwork.Join(Parent, this);
+                await _graphNetwork.Join(Parent, this);
+            }
+            catch { }
         }
 
         public async Task Heart()

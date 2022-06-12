@@ -1,6 +1,7 @@
 ﻿using FileMatch;
 using System;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Threading.Tasks;
 
@@ -30,8 +31,8 @@ namespace FileSystem
             }
         }
 
-        int _downloadSpeed;
-        public int DownloadSpeed
+        long _downloadSpeed;
+        public long DownloadSpeed
         {
             get
             {
@@ -99,11 +100,15 @@ namespace FileSystem
         private async Task DownloadChunk(IFileNetwork fileNetwork, Node node, Queue<int> input, Queue<Chunk> output)
         {
             var seq = 0;
+            var stopWatch = new Stopwatch();
             while (seq != -1)
             {
                 seq = await input.Dequeue();
+                stopWatch.Restart();
                 var chunck = await fileNetwork.GetChunk(node, Id, seq, ChunkSize);
-                Console.WriteLine("Download " + seq);
+                stopWatch.Stop();
+                Console.WriteLine("Download " + seq + stopWatch.ElapsedMilliseconds);
+                DownloadSpeed = ChunkSize * 1000 / stopWatch.ElapsedMilliseconds;
                 output.Enqueue(chunck);
             }
         }
