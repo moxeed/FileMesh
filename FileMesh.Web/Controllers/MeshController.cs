@@ -65,7 +65,7 @@ namespace FileMesh.Controllers
             return MeshService.Health(node);
         }
 
-        [HttpPost]
+        [HttpPost("/Upload")]
         public async Task<bool> Upload([FromForm] IFormFile file) 
         {
             var path = $"{Directory.GetCurrentDirectory()}\\Data\\{file.FileName}";
