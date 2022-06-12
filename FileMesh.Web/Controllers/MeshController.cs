@@ -59,17 +59,30 @@ namespace FileMesh.Controllers
             return MeshService.GetFiles();
         }
 
-
-        [HttpPost("/Add")]
-        public Task Add(FileModel file)
-        {
-            return MeshService.AddFile(file);
-        }
-
         [HttpPost("/Health")]
         public bool Health(Node node)
         {
             return MeshService.Health(node);
+        }
+
+        [HttpPost]
+        public async Task<bool> Upload([FromForm] IFormFile file) 
+        {
+            var path = $"{Directory.GetCurrentDirectory()}\\Data\\{file.FileName}";
+            Directory.CreateDirectory("Data");
+            using (var stream = System.IO.File.Create(path))
+            {
+                await file.CopyToAsync(stream);
+            }
+
+            await MeshService.AddFile(new FileModel
+            {
+                Size = file.Length,
+                FileName = file.FileName,
+                FullPath = path,
+            });
+
+            return true;
         }
     }
 }
