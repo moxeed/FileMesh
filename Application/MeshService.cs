@@ -5,6 +5,7 @@ using Service.Infrastructure;
 using Service.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Service
@@ -72,6 +73,10 @@ namespace Service
         public static Task<IEnumerable<Entry>> Search(string term)
         {
             return Index.Search(term);
+        }
+        public static ObservableCollection<PhysicalFile> GetFiles()
+        {
+            return FileRegistery.Files;
         }
 
         public static string Reset() => Index.Reset();
