@@ -1,5 +1,4 @@
 ﻿using FileMatch;
-using FileMatch.Model;
 using FileSystem;
 using Rssdp;
 using Service.Infrastructure;
@@ -67,7 +66,7 @@ namespace Service
             return new Node(parentDepth + 1, Http.GetIp());
         }
 
-        public static Task Insert(Entry entry) => Index.PostInsert(entry);
+        public static Task Insert(Entry entry, Node source) => Index.Insert(entry, source);
 
         public static Task<IEnumerable<Entry>> Search(string term)
         {
@@ -75,6 +74,7 @@ namespace Service
             return Index.Search(entryName);
         }
 
-        public static IndexModel Split(Node newChild) => Index.Split(newChild);
+        public static Task<bool> Reset(char start, char end) => Index.Reset(start, end);
+        public static Task<bool> Join(Node child) => Index.Join(child);
     }
 }

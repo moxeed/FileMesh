@@ -2,9 +2,9 @@
 using EmbedIO.Routing;
 using EmbedIO.WebApi;
 using FileMatch;
-using FileMatch.Model;
 using FileSystem;
 using Service;
+using Service.Models;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -19,8 +19,8 @@ namespace FileMesh.Controllers
 
         [Route(HttpVerbs.Post, "/Insert")]
         public async Task Insert() {
-            var entry = await HttpContext.GetRequestDataAsync<Entry>();
-            await MeshService.Insert(entry);
+            var model = await HttpContext.GetRequestDataAsync<InsertModel>();
+            await MeshService.Insert(model.Entry, model.Source);
         }
 
         [Route(HttpVerbs.Get, "/Search")]
@@ -30,11 +30,17 @@ namespace FileMesh.Controllers
             return MeshService.Search(term);
         }
 
-        [Route(HttpVerbs.Post, "/Split")]
-        public async Task<IndexModel> Split()
+        [Route(HttpVerbs.Post, "/Join")]
+        public async Task Join()
         {
-            var newChild = await HttpContext.GetRequestDataAsync<Node>();
-            return MeshService.Split(newChild);
+            var node = await HttpContext.GetRequestDataAsync<Node>();
+            await MeshService.Join(node);
+        }
+
+        [Route(HttpVerbs.Get, "/Reset")]
+        public async Task Reset([QueryField]char start, [QueryField] char end)
+        {
+            await MeshService.Reset(start, end);
         }
 
         [Route(HttpVerbs.Get, "/File")]

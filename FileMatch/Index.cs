@@ -1,4 +1,4 @@
-﻿using FileMatch.Model;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -11,13 +11,13 @@ namespace FileMatch
 
         public Node Parent { get; private set; }
         public List<Entry> Entries { get; private set; }
-        public ICollection<Bucket> Buckets { get; }
+        public List<Bucket> Buckets { get; }
 
-        public Index(IGraphNetwork graphNetwork, Node node): base(node, char.MinValue, char.MaxValue)
+        public Index(IGraphNetwork graphNetwork, Node node) : base(node, char.MaxValue, char.MinValue)
         {
             _graphNetwork = graphNetwork;
             Entries = new List<Entry>();
-            Buckets = new HashSet<Bucket>();
+            Buckets = new List<Bucket>();
         }
 
         public async Task SelectParent()
@@ -26,17 +26,16 @@ namespace FileMatch
 
             Parent = new Node(-1, "");
 
-            if (!nodes.Any()) {
+            if (!nodes.Any())
+            {
                 return;
             }
 
             Parent = nodes.OrderBy(n => n.Depth).First();
             Depth = Parent.Depth + 1;
+            PropertyChange(nameof(Parent));
 
-            var index = await _graphNetwork.Split(Parent, this);
-            Entries.AddRange(index.Entries);
-            RangeStart = index.RangeStart;
-            RangeEnd = index.RangeEnd;
+            await _graphNetwork.Join(Parent, this);
         }
 
         internal Index(IGraphNetwork graphNetwork, Node node, int rangeStart, int rangeEnd, List<Entry> entries) : base(node, char.MinValue, char.MaxValue)
@@ -45,78 +44,96 @@ namespace FileMatch
             RangeStart = rangeStart;
             RangeEnd = rangeEnd;
             Entries = entries;
-            Buckets = new HashSet<Bucket>();
+            Buckets = new List<Bucket>();
         }
 
-        public Task Insert(Entry entry)
+        public async Task Insert(Entry entry, Node source = null)
         {
-            entry.Locations.Add(this);
-
-            var relatedNode = GetRalatedNode(entry.Key);
-
-            if (relatedNode != null) {
-                return _graphNetwork.Insert(relatedNode, entry);
+            if (source == null)
+            {
+                entry.Locations.Add(this);
             }
 
-            Entries.Add(entry);
-            return Task.CompletedTask;
-        }
-
-        public Task PostInsert(Entry entry)
-        {
-            var relatedNode = GetRalatedNode(entry.Key);
-
-            if (relatedNode != null)
+            if (Parent.Depth == -1 || source.Address == Parent.Address) 
             {
-                return _graphNetwork.Insert(relatedNode, entry);
+                await Insert(entry);
             }
 
-            Entries.Add(entry);
-            return Task.CompletedTask;
-        }
-
-        public Task<IEnumerable<Entry>> Search(EntryName entryName)
-        {
-            var relatedNode = GetRalatedNode(entryName.Key);
-
-            if (relatedNode != null)
+            if (!IsInRange(entry))
             {
-                return _graphNetwork.Search(relatedNode, entryName.Name);
-            }
-            return Task.FromResult(Entries.Where(t => t.Name.IsMatch(entryName)));
-        }
-
-        public IndexModel Split(Node newChild)
-        {
-            var mid = (Buckets.Max(b => b.RangeEnd) + RangeEnd) / 2;
-            var outEntries = Entries.Where(e => e.Key <= mid).ToList();
-            var index = new IndexModel {
-                RangeEnd = mid,
-                RangeStart = RangeStart,
-                Entries = outEntries
-            };
-
-            Entries = Entries.Where(e => e.Key > mid).ToList();
-            Buckets.Add(new Bucket(newChild, RangeStart, mid));
-            return index;
-        }
-
-        private Node GetRalatedNode(int key) {
-
-            if (key > RangeEnd || key < RangeStart)
-            {
-                return Parent;
+                await _graphNetwork.Insert(Parent, this, entry);
+                return;
             }
 
-            foreach (var bucket in Buckets)
+            await Insert(entry);
+        }
+
+        private async Task<bool> Insert(Entry entry)
+        {
+            var key = entry.Key;
+
+            foreach (var child in Buckets)
             {
-                if (key <= RangeEnd || key >= RangeStart)
+                if (key > child.RangeStart)
                 {
-                    return bucket;
+                    await _graphNetwork.Insert(child, this, entry);
+                    child.RangeStart = Math.Min(RangeStart, key);
+                    child.RangeEnd = Math.Max(RangeEnd, key);
+                    return true;
                 }
             }
 
-            return null;
+            Entries.Add(entry);
+            RangeStart = Math.Min(RangeStart, key);
+            RangeEnd = Math.Max(RangeEnd, key);
+            return true;
+        }
+
+        public async Task<IEnumerable<Entry>> Search(EntryName entryName)
+        {
+            if (!IsInRange(entryName))
+            {
+                if (Parent.Depth != -1)
+                    return await _graphNetwork.Search(Parent, entryName.Name);
+
+                return new List<Entry>();
+            }
+
+            foreach (var child in Buckets)
+            {
+                if (child.IsInRange(entryName))
+                {
+                    return await _graphNetwork.Search(child, entryName.Name);
+                }
+            }
+
+            return Entries.Where(t => t.Name.IsMatch(entryName));
+        }
+
+        public async Task<bool> Join(Node node)
+        {
+            var keys = Entries.Select(d => d.Key).DefaultIfEmpty();
+            var start = (keys.Max() - keys.Min()) / (Buckets.Count + 1) + keys.Max();
+            Buckets.Insert(0, new Bucket(node, start, start));
+            await _graphNetwork.Reset(node, start, start);
+
+            return true;
+        }
+
+        public async Task<bool> Reset(char start, char end)
+        {
+            RangeStart = start;
+            RangeEnd = end;
+
+            var entries = Entries.Select(x => x);
+            Entries.Clear();
+
+            foreach (var key in entries)
+            {
+                await Insert(key, this);
+            }
+
+            return true;
         }
     }
 }

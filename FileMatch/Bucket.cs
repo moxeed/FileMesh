@@ -9,7 +9,7 @@
             {
                 return _rangeStart;
             }
-            protected set
+            set
             {
                 _rangeStart = value;
                 PropertyChange(nameof(RangeStart));
@@ -23,7 +23,7 @@
             {
                 return _rangeEnd;
             }
-            protected set
+            set
             {
                 _rangeEnd = value;
                 PropertyChange(nameof(RangeEnd));
@@ -35,5 +35,8 @@
             RangeStart = rangeStart;
             RangeEnd = rangeEnd;
         }
+
+        public bool IsInRange(Entry entry) => entry.Key >= RangeStart && entry.Key <= RangeEnd;
+        public bool IsInRange(EntryName entry) => entry.Key >= RangeStart && entry.Key <= RangeEnd;
     }
 }
