@@ -6,6 +6,7 @@ using Service.Infrastructure;
 using Service.Models;
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Threading.Tasks;
 
 namespace Service
@@ -76,5 +77,11 @@ namespace Service
         }
 
         public static IndexModel Split(Node newChild) => Index.Split(newChild);
+
+        public static ObservableCollection<PhysicalFile> GetFiles()
+        {
+            return FileRegistery.Files;
+        }
+
     }
 }

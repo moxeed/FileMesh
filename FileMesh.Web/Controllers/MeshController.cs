@@ -3,6 +3,8 @@ using FileMatch.Model;
 using FileSystem;
 using Microsoft.AspNetCore.Mvc;
 using Service;
+using System.Collections.ObjectModel;
+using Service.Models;
 
 namespace FileMesh.Controllers
 {
@@ -30,17 +32,30 @@ namespace FileMesh.Controllers
             return MeshService.Split(node);
         }
 
+        [HttpPost("/Download")]
+        public Guid Download(Entry entry)
+        {
+            MeshService.DownloadFile(entry);
+            return entry.Id;
+        }
+
         [HttpGet("/File")]
         public Task<Chunk> File(Guid id, int seq, int size)
         {
             return MeshService.GetChunck(id, seq, size);
         }
 
-        [HttpPost("/Download")]
-        public Guid Download(Entry entry)
+        [HttpGet("/List")]
+        public ObservableCollection<PhysicalFile> List()
         {
-            MeshService.DownloadFile(entry);
-            return entry.Id;
+            return MeshService.GetFiles();
+        }
+
+
+        [HttpPost("/Add")]
+        public Task Add(FileModel file)
+        {
+            return MeshService.AddFile(file);
         }
     }
 }
