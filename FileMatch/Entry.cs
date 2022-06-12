@@ -7,7 +7,7 @@ namespace FileMatch
     {
         public Guid Id { get; set; }
         public long Size { get; set; }
-        public EntryName Name { get; set; }
+        public string Name { get; set; }
         public List<Node> Locations { get; set; }
 
         public Entry() {
@@ -18,10 +18,10 @@ namespace FileMatch
         {
             Id = id;
             Size = size;
-            Name = new EntryName(name);
+            Name = name;
             Locations = new List<Node>();
         }
 
-        internal int Key => Name.Key;
+        public bool IsMatch(string term) => Name.ToLower().Contains(term);
     }
 }

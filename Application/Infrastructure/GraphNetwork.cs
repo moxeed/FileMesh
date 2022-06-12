@@ -32,8 +32,10 @@ namespace Service.Infrastructure
 
         public async Task<IEnumerable<Entry>> Search(Node node, string term) => await Http.Get<List<Entry>>(node, nameof(Search) + "?term=" + term);
 
-        public Task Reset(Node node, int start, int end) => Http.Get<bool>(node, nameof(Reset) + $"?start={start}&end={end}");
+        public Task<string> Reset(Node node) => Http.Get<string>(node, nameof(Reset));
 
         public Task Join(Node parent, Node node) => Http.Post<bool>(parent, nameof(Join), node);
+
+        public Task Health(Node parent, Node node) => Http.Post<bool>(parent, nameof(Health), node);
     }
 }

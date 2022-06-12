@@ -18,9 +18,9 @@ namespace FileMesh.Controllers
 
 
         [Route(HttpVerbs.Post, "/Insert")]
-        public async Task Insert() {
+        public async Task<bool> Insert() {
             var model = await HttpContext.GetRequestDataAsync<InsertModel>();
-            await MeshService.Insert(model.Entry, model.Source);
+            return await MeshService.Insert(model.Entry, model.Source);
         }
 
         [Route(HttpVerbs.Get, "/Search")]
@@ -38,15 +38,22 @@ namespace FileMesh.Controllers
         }
 
         [Route(HttpVerbs.Get, "/Reset")]
-        public async Task Reset([QueryField]char start, [QueryField] char end)
+        public string Reset()
         {
-            await MeshService.Reset(start, end);
+            return MeshService.Reset();
         }
 
         [Route(HttpVerbs.Get, "/File")]
         public Task<Chunk> File([QueryField] Guid id, [QueryField] int seq, [QueryField] int size)
         {
             return MeshService.GetChunck(id, seq, size);
+        }
+
+        [Route(HttpVerbs.Post, "/Health")]
+        public async Task<bool> Health()
+        {
+            var node = await HttpContext.GetRequestDataAsync<Node>();
+            return MeshService.Health(node);
         }
     }
 }

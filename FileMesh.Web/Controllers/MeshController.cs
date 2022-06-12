@@ -34,9 +34,9 @@ namespace FileMesh.Controllers
         }
 
         [HttpGet("/Reset")]
-        public Task<bool> Reset(char start, char end)
+        public string Reset()
         {
-            return MeshService.Reset(start, end);
+            return MeshService.Reset();
         }
 
         [HttpGet("/File")]
@@ -50,6 +50,12 @@ namespace FileMesh.Controllers
         {
             MeshService.DownloadFile(entry);
             return entry.Id;
+        }
+
+        [HttpPost("/Health")]
+        public bool Health(Node node)
+        {
+            return MeshService.Health(node);
         }
     }
 }

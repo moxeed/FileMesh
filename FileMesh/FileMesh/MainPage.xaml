@@ -8,20 +8,14 @@
         <StackLayout Orientation="Horizontal" Margin="5,5,5,0" BindingContext="{x:Static local:MeshService.Index}">
             <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
                 <StackLayout>
-                    <Label Text="RangeStart" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
-                    <Label x:Name="rangeStart" Text="{Binding RangeStart}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
-                </StackLayout>
-            </Frame>
-            <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
-                <StackLayout>
                     <Label Text="Depth" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
                     <Label x:Name="depth" Text="{Binding Depth}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
                 </StackLayout>
             </Frame>
             <Frame BackgroundColor="#00564d" HorizontalOptions="FillAndExpand">
                 <StackLayout>
-                    <Label Text="RangeEnd" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
-                    <Label x:Name="rangeEnd" Text="{Binding RangeEnd}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
+                    <Label Text="CharSet" HorizontalTextAlignment="Center" TextColor="#A5DEF2" FontSize="16"/>
+                    <Label Text="{Binding CharSet}" HorizontalTextAlignment="Center" TextColor="White" FontSize="14"/>
                 </StackLayout>
             </Frame>
         </StackLayout>
@@ -78,7 +72,7 @@
                         <StackLayout Margin="5,0,5,5">
                             <StackLayout Orientation="Horizontal">
                                 <StackLayout Orientation="Horizontal" Margin="10">
-                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Path=Name.Name}" FontSize="14" HorizontalTextAlignment="Start"/>
+                                    <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Path=Name}" FontSize="14" HorizontalTextAlignment="Start"/>
                                     <Label HorizontalOptions="FillAndExpand" TextColor="#00564d" Text="{Binding Size}" FontSize="14" HorizontalTextAlignment="End"/>
                                 </StackLayout>
                             </StackLayout>

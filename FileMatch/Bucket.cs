@@ -1,42 +1,43 @@
-﻿namespace FileMatch
+﻿using System.Linq;
+
+namespace FileMatch
 {
     public class Bucket : Node
     {
-        int _rangeStart;
-        public int RangeStart
+        const byte MaxAge = 3;
+
+        public byte _age;
+        string _charSet;
+        public string CharSet
         {
             get
             {
-                return _rangeStart;
+                return _charSet;
             }
             set
             {
-                _rangeStart = value;
-                PropertyChange(nameof(RangeStart));
+                _charSet = value;
+                PropertyChange(nameof(CharSet));
             }
         }
 
-        int _rangeEnd;
-        public int RangeEnd
+        public Bucket(Node node) : base(node.Depth, node.Address)
         {
-            get
-            {
-                return _rangeEnd;
-            }
-            set
-            {
-                _rangeEnd = value;
-                PropertyChange(nameof(RangeEnd));
-            }
+            CharSet = string.Empty;
         }
 
-        public Bucket(Node node, int rangeStart, int rangeEnd) : base(node.Depth, node.Address)
+        public bool IsInRange(Entry entry) => entry.Name.All(c => _charSet.Contains(c));
+        public bool IsInRange(string name) => name.All(c => _charSet.Contains(c));
+        public int Similarity(string term) => CharSet.Intersect(term).Count();
+
+        internal void Age() => _age++;
+        internal void Live()
         {
-            RangeStart = rangeStart;
-            RangeEnd = rangeEnd;
+            if (_age > 0)
+            {
+                _age--;
+            }
         }
-
-        public bool IsInRange(Entry entry) => entry.Key >= RangeStart && entry.Key <= RangeEnd;
-        public bool IsInRange(EntryName entry) => entry.Key >= RangeStart && entry.Key <= RangeEnd;
+        internal bool IsDead => _age > MaxAge;
     }
 }

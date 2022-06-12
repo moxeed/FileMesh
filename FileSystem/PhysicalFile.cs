@@ -66,7 +66,7 @@ namespace FileSystem
         public PhysicalFile(Entry entry, int chunkSize = 65_536)
         {
             Id = entry.Id;
-            Name = entry.Name.Name;
+            Name = entry.Name;
             Size = entry.Size;
             Path = $"{Directory.GetCurrentDirectory()}\\Data\\{Id}{System.IO.Path.GetExtension(Name)}";
             LastWrittenChunkNumber = 0;

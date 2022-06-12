@@ -23,6 +23,7 @@ namespace Service
         public static async Task Initilize()
         {
             await Index.SelectParent();
+            _ = Task.Run(Index.Heart);
 
             var deviceDefinition = new SsdpRootDevice()
             {
@@ -66,15 +67,15 @@ namespace Service
             return new Node(parentDepth + 1, Http.GetIp());
         }
 
-        public static Task Insert(Entry entry, Node source) => Index.Insert(entry, source);
+        public static Task<bool> Insert(Entry entry, Node source) => Index.Insert(entry, source);
 
         public static Task<IEnumerable<Entry>> Search(string term)
         {
-            var entryName = new EntryName(term);
-            return Index.Search(entryName);
+            return Index.Search(term);
         }
 
-        public static Task<bool> Reset(char start, char end) => Index.Reset(start, end);
+        public static string Reset() => Index.Reset();
         public static Task<bool> Join(Node child) => Index.Join(child);
+        public static bool Health(Node child) => Index.Health(child);
     }
 }
