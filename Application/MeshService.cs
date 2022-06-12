@@ -74,9 +74,6 @@ namespace Service
             var entryName = new EntryName(term);
             return Index.Search(entryName);
         }
-
-        public static IndexModel Split(Node newChild) => Index.Split(newChild);
-
         public static ObservableCollection<PhysicalFile> GetFiles()
         {
             return FileRegistery.Files;
