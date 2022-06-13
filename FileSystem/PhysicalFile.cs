@@ -69,7 +69,7 @@ namespace FileSystem
             Id = entry.Id;
             Name = entry.Name;
             Size = entry.Size;
-            Path = $"{Directory.GetCurrentDirectory()}\\Data\\{Id}{System.IO.Path.GetExtension(Name)}";
+            Path = $"{Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData)}\\{Id}{System.IO.Path.GetExtension(Name)}";
             LastWrittenChunkNumber = 0;
             ChunkSize = chunkSize;
             _isCompelete = false;
@@ -115,7 +115,6 @@ namespace FileSystem
 
         private async Task WriteFile(Queue<int> input, Queue<Chunk> output)
         {
-            Directory.CreateDirectory("Data");
             using (File.Create(Path)) { }
 
             using (var stream = new FileStream(Path, FileMode.Append))
