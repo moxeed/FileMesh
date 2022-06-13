@@ -30,7 +30,7 @@ namespace FileMatch
         public bool IsInRange(string name) => name.All(c => _charSet.Contains(c));
         public int Similarity(string term) => CharSet.Intersect(term).Count();
 
-        internal void Age() => _age++;
+        internal void Age(byte age = 1) => _age += age;
         internal void Live()
         {
             if (_age > 0)

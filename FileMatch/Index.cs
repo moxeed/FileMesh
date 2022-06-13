@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -140,19 +139,25 @@ namespace FileMatch
             {
                 if (child.IsInRange(name))
                 {
-                    result.AddRange(await _graphNetwork.Search(child, name));
+                    try { 
+                        result.AddRange(await _graphNetwork.Search(child, name));
+                    }
+                    catch { child.Age(8); }
                 }
             }
 
             if (!IsInRange(name))
             {
-                if (Parent.Depth != -1)
-                    return await _graphNetwork.Search(Parent, name);
-
-                return new List<Entry>();
+                try
+                {
+                    if (Parent.Depth != -1)
+                        result.AddRange(await _graphNetwork.Search(Parent, name));
+                }
+                catch { _ = SelectParent(); }
             }
 
-            return Entries.Where(t => t.IsMatch(name));
+            result.AddRange(Entries.Where(t => t.IsMatch(name)));
+            return result;
         }
 
         public async Task<bool> Join(Node node)
