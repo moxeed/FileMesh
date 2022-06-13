@@ -41,10 +41,10 @@ namespace FileMesh.Controllers
         }
 
         [HttpPost("/Download")]
-        public Guid Download(Entry entry)
+        public Guid Download(DownloadModel model)
         {
-            MeshService.DownloadFile(entry);
-            return entry.Id;
+            MeshService.DownloadFile(model.Entry, model.ChunckSize);
+            return model.Entry.Id;
         }
 
         [HttpGet("/File")]

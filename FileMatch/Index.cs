@@ -113,6 +113,7 @@ namespace FileMatch
                 await _graphNetwork.Insert(bestBucket, this, entry);
             }
 
+            CharSet = string.Concat((CharSet + entry.Name.ToLower()).Distinct());
             bestBucket.CharSet = string.Concat((bestBucket.CharSet + entry.Name.ToLower()).Distinct());
             return true;
         }
@@ -133,11 +134,13 @@ namespace FileMatch
 
         public async Task<IEnumerable<Entry>> Search(string name)
         {
+            var result = new List<Entry>();
+
             foreach (var child in Buckets)
             {
                 if (child.IsInRange(name))
                 {
-                    return await _graphNetwork.Search(child, name);
+                    result.AddRange(await _graphNetwork.Search(child, name));
                 }
             }
 

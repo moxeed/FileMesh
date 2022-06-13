@@ -1,8 +1,7 @@
 ﻿using FileMatch;
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.ComponentModel;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace FileSystem
@@ -18,20 +17,27 @@ namespace FileSystem
             _fileNetwork = fileNetwork;
         }
 
-        public void Download(Entry entry) { 
-            var file = PhysicalFile.Download(entry, _fileNetwork);
+        public void Download(Entry entry, int chunkSize)
+        {
+            if (Files.Any(a => a.Id == entry.Id))
+                return;
+            var file = PhysicalFile.Download(entry, _fileNetwork, chunkSize);
             Files.Add(file);
         }
 
         public void AddFile(PhysicalFile file)
         {
+            if (Files.Any(a => a.Id == file.Id))
+                return;
             Files.Add(file);
         }
 
         public Task<Chunk> GetChunck(Guid id, int seq, int size)
         {
-            foreach (var file in Files) {
-                if (file.Id == id) {
+            foreach (var file in Files)
+            {
+                if (file.Id == id)
+                {
                     return file.GetChunck(seq, size);
                 }
             }

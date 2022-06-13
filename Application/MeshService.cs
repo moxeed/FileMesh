@@ -57,9 +57,9 @@ namespace Service
             return Index.Insert(entry);
         }
 
-        public static void DownloadFile(Entry entry)
+        public static void DownloadFile(Entry entry, int chunkSize = 65_536)
         {
-            FileRegistery.Download(entry);
+            FileRegistery.Download(entry, chunkSize);
         }
 
         public static Node GetNode()

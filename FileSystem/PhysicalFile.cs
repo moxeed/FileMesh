@@ -75,9 +75,9 @@ namespace FileSystem
             _isCompelete = false;
         }
 
-        public static PhysicalFile Download(Entry entry, IFileNetwork fileNetwork)
+        public static PhysicalFile Download(Entry entry, IFileNetwork fileNetwork, int chunkSize)
         {
-            var file = new PhysicalFile(entry);
+            var file = new PhysicalFile(entry, chunkSize);
 
             var reqQueue = new Queue<int>();
             var resultQueue = new Queue<Chunk>();
